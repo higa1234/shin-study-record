@@ -5,7 +5,10 @@ import { supabase } from "../utils/supabase";
 
 export async function getAllStudyRecords(): Promise<StudyRecord[]> {
   // supabaseの"study-record"テーブルから全件取得
-  const response = await supabase.from("study-record").select("*");
+  const response = await supabase
+    .from("study-record")
+    .select("*")
+    .order("id", { ascending: true });
 
   // 取得結果エラー
   if (response.error) {
@@ -33,5 +36,17 @@ export async function deleteStudyRecordById(
   id: string
 ): Promise<{ error: PostgrestError | null }> {
   const { error } = await supabase.from("study-record").delete().eq("id", id);
+  return { error };
+}
+
+export async function updateStudyRecord(
+  id: string,
+  title: string,
+  time: number
+): Promise<{ error: PostgrestError | null }> {
+  const { error } = await supabase
+    .from("study-record")
+    .update({ title: title, time: time })
+    .eq("id", id);
   return { error };
 }

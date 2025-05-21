@@ -8,6 +8,7 @@ import { StudyRecord } from "../domain/studyRecords";
 let mockGetAllStudyRecords = jest.fn();
 let mockInsertStudyRecord = jest.fn();
 let mockDeleteStudyRecordById = jest.fn();
+let mockUpdateStudyRecord = jest.fn();
 
 jest.mock("../libs/studyRecords", () => {
   return {
@@ -15,6 +16,8 @@ jest.mock("../libs/studyRecords", () => {
     insertStudyRecord: (title: string, time: number) =>
       mockInsertStudyRecord(title, time),
     deleteStudyRecordById: (id: string) => mockDeleteStudyRecordById(id),
+    updateStudyRecord: (id: string, title: string, time: number) =>
+      mockUpdateStudyRecord(id, title, time),
   };
 });
 
@@ -324,6 +327,87 @@ describe("シン・学習記録アプリ-Jest", () => {
     await waitFor(() => {
       const rows = screen.getByTestId("table").querySelectorAll("tr");
       expect(rows.length - 1).toBe(2);
+    });
+  });
+
+  test("モーダルが編集というタイトルになっている", async () => {
+    // モックの設定
+    mockGetAllStudyRecords = jest
+      .fn()
+      .mockResolvedValue([
+        new StudyRecord("1", "jest1", 1),
+        new StudyRecord("2", "jest2", 2),
+      ]);
+
+    // レンダリング_ローディングが表示されることを確認
+    await renderAndWaitForTable();
+
+    // モーダル(編集モード)を開く
+    const editButtons = screen.getAllByRole("button", { name: "編集" });
+
+    // 編集ボタンを押す（一番上）
+    await user.click(editButtons[0]);
+
+    // モーダルのタイトルが表示されることを確認
+    await waitFor(() => {
+      const modalTitle = screen.getByTestId("modal-header");
+      expect(modalTitle).toBeInTheDocument();
+    });
+  });
+
+  test("編集できること", async () => {
+    // モックの設定
+    mockGetAllStudyRecords = jest
+      .fn()
+      // 初回取得（初期データ）
+      .mockResolvedValueOnce([
+        new StudyRecord("1", "jest1", 1),
+        new StudyRecord("2", "jest2", 2),
+      ])
+      // 編集後に再取得する際のデータ
+      .mockResolvedValue([
+        new StudyRecord("1", "jest1", 1),
+        new StudyRecord("2", "jest2Edited", 20),
+      ]);
+    mockUpdateStudyRecord = jest.fn().mockResolvedValue("");
+
+    // レンダリング_ローディングが表示されることを確認
+    await renderAndWaitForTable();
+
+    // モーダルを開く 編集ボタンをクリック（一番上）
+    const editButtons = screen.getAllByRole("button", { name: "編集" });
+    await user.click(editButtons[1]);
+
+    // 入力内容の確認
+    expect(screen.getByDisplayValue("jest2")).toBeInTheDocument();
+    expect(screen.getByDisplayValue(2)).toBeInTheDocument();
+
+    // 入力内容のクリア
+    await user.clear(screen.getByPlaceholderText("学習内容"));
+    await user.clear(screen.getByPlaceholderText("学習時間"));
+
+    // 入力フォームに値を入れる
+    await user.type(screen.getByPlaceholderText("学習内容"), "jest2Edited");
+    await user.type(screen.getByPlaceholderText("学習時間"), "20");
+
+    // 登録ボタンを押す（form submit）
+    const submitButton = screen.getByRole("button", { name: "登録" });
+    await user.click(submitButton);
+
+    // 編集モードでの登録が実行されたか
+    await waitFor(() => {
+      expect(mockUpdateStudyRecord).toHaveBeenCalledTimes(1); // 回数
+      expect(mockUpdateStudyRecord).toHaveBeenCalledWith(
+        "2",
+        "jest2Edited",
+        20
+      ); // 正しい引数か
+    });
+
+    // 編集後の入力内容の確認
+    await waitFor(() => {
+      expect(screen.getByText("jest2Edited")).toBeInTheDocument();
+      expect(screen.getByText(20)).toBeInTheDocument();
     });
   });
 });
