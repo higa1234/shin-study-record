@@ -56,7 +56,6 @@ const InputStudyRecordModalComponent: FC<Props> = (props) => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { studyTitle, studyTime } = data;
     let success = false;
-    console.log(data);
 
     // 新規登録の場合
     if (modalMode === ModalMode.CREATE) {

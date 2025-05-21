@@ -304,11 +304,10 @@ describe("シン・学習記録アプリ-Jest", () => {
     // レンダリング_ローディングが表示されることを確認
     await renderAndWaitForTable();
 
-    console.log("呼び出し回数:", mockGetAllStudyRecords.mock.calls.length);
-
+    // 初期状態の確認（初期状態は3件あるべき）
     await waitFor(() => {
       const rows = screen.getByTestId("table").querySelectorAll("tr");
-      expect(rows.length - 1).toBe(3); // 初期状態は3件あるべき
+      expect(rows.length - 1).toBe(3);
     });
 
     // 削除ボタンがあるか

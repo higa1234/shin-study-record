@@ -8,6 +8,9 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  Box,
+  Container,
+  Stack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
@@ -58,61 +61,70 @@ function App() {
 
   return (
     <>
-      <Heading>シン・学習記録アプリ</Heading>
-      <PrimaryButton
-        onClick={() => {
-          setModalMode(ModalMode.CREATE);
-          onOpen();
-        }}
-      >
-        新規登録
-      </PrimaryButton>
-      <InputStudyRecordModal
-        isOpen={isOpen}
-        onClose={onClose}
-        onClickRegister={onClickRegister}
-        onClickUpdate={onClickUpdate}
-        getAllStudyRecordsData={getAllStudyRecordsData}
-        modalMode={modalMode}
-        studyRecord={editTarget}
-      />
-      <TableContainer>
-        <Table variant="simple" data-testid="table">
-          <Thead>
-            <Tr>
-              <Th>学習内容</Th>
-              <Th>学習時間</Th>
-              <Th></Th>
-              <Th></Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {studyRecords.map((studyRecord) => (
-              <Tr key={studyRecord.id}>
-                <Td>{studyRecord.title}</Td>
-                <Td>{studyRecord.time}</Td>
-                <Td>
-                  <EditIconButton
-                    aria-label="編集"
-                    onClick={() => {
-                      setModalMode(ModalMode.EDIT);
-                      onOpen();
-                      setEditTarget(studyRecord);
-                      console.log(studyRecord);
-                    }}
-                  />
-                </Td>
-                <Td>
-                  <DeleteIconButton
-                    aria-label="削除"
-                    onClick={() => handleDelete(studyRecord.id)}
-                  />
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <Container maxW="container.lg" centerContent>
+        <Box w="100%" p={8}>
+          <Stack spacing={4}>
+            <Heading size={{ base: "xl", md: "2xl" }} textAlign={"center"}>
+              シン・学習記録アプリ
+            </Heading>
+            <Box w="75%" textAlign="right">
+              <PrimaryButton
+                onClick={() => {
+                  setModalMode(ModalMode.CREATE);
+                  onOpen();
+                }}
+              >
+                新規登録
+              </PrimaryButton>
+            </Box>
+            <InputStudyRecordModal
+              isOpen={isOpen}
+              onClose={onClose}
+              onClickRegister={onClickRegister}
+              onClickUpdate={onClickUpdate}
+              getAllStudyRecordsData={getAllStudyRecordsData}
+              modalMode={modalMode}
+              studyRecord={editTarget}
+            />
+            <TableContainer w={{ base: "fit-content", md: "100%" }} mx="auto">
+              <Table variant="simple" data-testid="table">
+                <Thead>
+                  <Tr>
+                    <Th textAlign="center">学習内容</Th>
+                    <Th textAlign="center">学習時間</Th>
+                    <Th></Th>
+                    <Th></Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {studyRecords.map((studyRecord) => (
+                    <Tr key={studyRecord.id}>
+                      <Td textAlign="center">{studyRecord.title}</Td>
+                      <Td textAlign="center">{studyRecord.time}</Td>
+                      <Td>
+                        <EditIconButton
+                          aria-label="編集"
+                          onClick={() => {
+                            setModalMode(ModalMode.EDIT);
+                            onOpen();
+                            setEditTarget(studyRecord);
+                          }}
+                        />
+                      </Td>
+                      <Td>
+                        <DeleteIconButton
+                          aria-label="削除"
+                          onClick={() => handleDelete(studyRecord.id)}
+                        />
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </Stack>
+        </Box>
+      </Container>
     </>
   );
 }
