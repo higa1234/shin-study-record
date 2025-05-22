@@ -1,55 +1,64 @@
-# React + TypeScript + Vite
+# サービス名
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+シン・学習記録アプリ（shin-study-record）
 
-Currently, two official plugins are available:
+# サービスの説明
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+シン・学習記録アプリ（shin-study-record）は、学習した内容と時間を記録・管理できるシンプルな学習記録アプリです。
+ユーザーは学習内容と学習時間を入力して保存できます。また登録した内容と時間は編集・削除できます。
+自己学習管理や、日々の成長記録に活用できます。
 
-## Expanding the ESLint configuration
+URL：shin-study-record.web.app/
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# 使用技術
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- 言語：TypeScript
+- フロントエンド: React + Vite + Chakra UI(v2)
+- データベース: Supabase
+- ホスティング: Firebase Hosting
+- テスト：Jest
+
+# 環境設定
+
+1. このリポジトリをクローン
+
+```
+git clone https://github.com/higa1234/shin-study-record.git
+cd shin-study-record
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. .envファイルを作成し、以下を記述
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
 ```
-# shin-study-record
+VITE_SUPABASE_URL=あなたのSupabaseプロジェクトURL
+VITE_SUPABASE_ANON_KEY=あなたのSupabase公開APIキー
+```
+
+※.envファイルはプロジェクトルートに配置します。
+
+3. 必要なパッケージのインストール
+
+```
+npm install
+```
+
+4. 起動
+
+```
+npm run dev
+```
+
+# テスト
+
+```
+npm run test
+```
+
+# バージョン
+
+npm ：9.6.4
+node：v20.0.0
+
+# 更新日
+
+2025/05/22
